@@ -42,13 +42,16 @@ export default function SignIn() {
         // Password is correct! Log them into the app context.
         login(data.username);
         router.replace('/');
-      } else {
+      } 
+      else {
         // Wrong password or user not found
         setErrorMessage(data.error || data.message || 'Login failed.');
       }
-    } catch (error) {
+    } 
+    catch (error) {
       setErrorMessage('Could not connect to server.');
-    } finally {
+    } 
+    finally {
       setLoading(false);
     }
   };
@@ -66,7 +69,7 @@ export default function SignIn() {
 
           <Text style={styles.label}>Username</Text>
           <TextInput 
-            style={styles.input} autoCapitalize="none" placeholder="e.g. developer123" 
+            style={styles.input} autoCapitalize="none" placeholder="username" 
             placeholderTextColor={COLORS.textLight} value={username} onChangeText={setUsername} 
           />
 

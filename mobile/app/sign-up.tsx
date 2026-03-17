@@ -50,13 +50,16 @@ export default function SignUp() {
         // Success! Log them in and send to dashboard
         login(cleanUsername);
         router.replace('/'); 
-      } else {
+      } 
+      else {
         // Backend caught an error (like username already taken)
         setErrorMessage(data.error || data.message || 'Registration failed.');
       }
-    } catch (error) {
+    } 
+    catch (error) {
       setErrorMessage('Could not connect to server.');
-    } finally {
+    } 
+    finally {
       setLoading(false);
     }
   };
@@ -66,7 +69,7 @@ export default function SignUp() {
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.headerBox}>
           <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>Start tracking your finances today.</Text>
+          <Text style={styles.subtitle}>Start managing your finances today.</Text>
         </View>
 
         <View style={styles.formCard}>
@@ -74,7 +77,7 @@ export default function SignUp() {
 
           <Text style={styles.label}>Username</Text>
           <TextInput 
-            style={styles.input} autoCapitalize="none" placeholder="e.g. developer123" 
+            style={styles.input} autoCapitalize="none" placeholder="username" 
             placeholderTextColor={COLORS.textLight} value={username} onChangeText={setUsername} 
           />
 
