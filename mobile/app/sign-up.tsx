@@ -84,7 +84,7 @@ function FloatingLabelInput({
           {
             borderColor,
             shadowOpacity,
-            shadowColor: COLORS.primary
+            shadowColor: COLORS.primary,
             shadowOffset: { width: 0, height: 0 },
             shadowRadius: 8,
             elevation: focused ? 3 : 0,

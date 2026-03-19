@@ -74,9 +74,8 @@ function LegendRow({
           <Animated.View
             style={[
               styles.legendBarFill,
-              { width: `${pct}%`, backgroundColor: item.color },
-            ]}
-          />
+              { width: `${pct}%` as any, backgroundColor: item.color },
+            ]} />
         </View>
       </View>
       <Text style={styles.legendValue}>Rs {item.value.toFixed(2)}</Text>
