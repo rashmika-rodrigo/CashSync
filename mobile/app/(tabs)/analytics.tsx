@@ -35,15 +35,7 @@ const CATEGORY_ICONS: Record<string, string> = {
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-function LegendRow({
-  item,
-  index,
-  total,
-}: {
-  item: any;
-  index: number;
-  total: number;
-}) {
+function LegendRow({ item, index, total }: { item: any; index: number; total: number; }) {
   const fadeAnim  = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
 
@@ -58,8 +50,7 @@ function LegendRow({
   const icon = CATEGORY_ICONS[item.text] || 'pricetag-outline';
 
   return (
-    <Animated.View
-      style={[styles.legendRow, { opacity: fadeAnim, transform: [{ translateX: slideAnim }] }]} >
+    <Animated.View style={[styles.legendRow, { opacity: fadeAnim, transform: [{ translateX: slideAnim }] }]} >
       {/* Icon + label */}
       <View style={[styles.legendIconWrap, { backgroundColor: item.color + '18' }]}>
         <Ionicons name={icon as any} size={14} color={item.color} />
@@ -182,7 +173,7 @@ export default function Analytics() {
                 </View>
                 <View>
                   <Text style={styles.summaryLabel}>Categories</Text>
-                  <Text style={styles.summaryValue}>{chartData.length}</Text>
+                  <Text style={styles.summaryValue} numberOfLines={1}>{chartData.length}</Text>
                 </View>
               </View>
               <View style={styles.summaryChip}>
@@ -191,7 +182,7 @@ export default function Analytics() {
                 </View>
                 <View>
                   <Text style={styles.summaryLabel}>Total Spent</Text>
-                  <Text style={[styles.summaryValue, { color: '#EF4444' }]}>
+                  <Text style={[styles.summaryValue, { color: '#EF4444' }]} numberOfLines={1}>
                     Rs {totalExpenses.toFixed(2)}
                   </Text>
                 </View>
@@ -202,7 +193,7 @@ export default function Analytics() {
                 </View>
                 <View>
                   <Text style={styles.summaryLabel}>Top Category</Text>
-                  <Text style={[styles.summaryValue, { color: '#3B82F6' }]}>{topCategory}</Text>
+                  <Text style={[styles.summaryValue, { color: '#3B82F6' }]} numberOfLines={1}>{topCategory}</Text>
                 </View>
               </View>
             </View>
@@ -304,11 +295,20 @@ const styles = StyleSheet.create({
   // Summary row
   summaryRow: { flexDirection: 'row', gap: 10, marginBottom: 16 },
   summaryChip: {
-    flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8,
-    backgroundColor: COLORS.surface, borderRadius: 16,
-    padding: 12, borderWidth: 1, borderColor: '#F1F5F9',
-    shadowColor: '#0F172A', shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04, shadowRadius: 8, elevation: 2,
+    flex: 1, 
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 8,
+    backgroundColor: COLORS.surface, 
+    borderRadius: 16,
+    padding: 10, 
+    borderWidth: 1, 
+    borderColor: '#F1F5F9',
+    shadowColor: '#0F172A', 
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04, 
+    shadowRadius: 8, 
+    elevation: 2,
   },
   summaryIconWrap: {
     width: 30, height: 30, borderRadius: 9,

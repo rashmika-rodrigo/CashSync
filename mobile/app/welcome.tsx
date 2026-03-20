@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
   // Footer
   footer: {
     paddingHorizontal: 24,
-    paddingBottom: 32,
+    paddingBottom: 60,
     gap: 14,
   },
 

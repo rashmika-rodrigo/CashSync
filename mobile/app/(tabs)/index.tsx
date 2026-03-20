@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, Alert, Animated } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, Alert, Animated, BackHandler } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useSimpleAuth } from '../../app/_layout';
 
 const COLORS = {
@@ -48,8 +48,7 @@ function TransactionItem({
           style={[
             styles.iconContainer,
             { backgroundColor: isIncome ? COLORS.incomeBg : COLORS.expenseBg },
-          ]}
-        >
+          ]} >
           <Ionicons
             name={isIncome ? 'arrow-down' : 'arrow-up'}
             size={18}
@@ -72,6 +71,7 @@ function TransactionItem({
             styles.transactionAmount,
             { color: isIncome ? COLORS.primary : COLORS.expense },
           ]}
+          numberOfLines={1}
         >
           {isIncome ? '+' : '-'}Rs. {Math.abs(Number(item.amount)).toFixed(2)}
         </Text>
@@ -103,7 +103,8 @@ export default function Dashboard() {
       ]);
       setTransactions(await txRes.json());
       setSummary(await sumRes.json());
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error loading data:', error);
     }
   }, [user]);
@@ -126,7 +127,7 @@ export default function Dashboard() {
   };
 
   const handleDelete = (id: number) => {
-    Alert.alert('Delete Transaction', 'This action cannot be undone.', [
+    Alert.alert('Delete Transaction', 'This action cannot be undone..!', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete',
@@ -134,20 +135,36 @@ export default function Dashboard() {
         onPress: async () => {
           try {
             const response = await fetch(`${API_URL}/transactions/${id}`, {
-              method: 'DELETE',
+            method: 'DELETE',
             });
             if (response.ok) {
-              loadData();
-            } else {
-              Alert.alert('Error', 'Failed to delete transaction.');
+                loadData();
+            } 
+            else {
+              Alert.alert('Error', 'Failed to delete transaction..!');
             }
-          } catch {
-            Alert.alert('Error', 'Could not connect to server.');
-          }
+            } 
+            catch {
+              Alert.alert('Error', 'Could not connect to server..!');
+            } 
         },
       },
-    ]);
+      ]);
   };
+
+  // The Hardware Back Button Interceptor
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleSignOut(); 
+        return true;     
+      };
+
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => subscription.remove();
+    }, [])
+  );
 
   const balance = Number(summary?.balance || 0);
   const income = Number(summary?.income || 0);
@@ -200,7 +217,7 @@ export default function Dashboard() {
               <View style={styles.cardBlobRight} />
 
               <Text style={styles.balanceLabel}>Total Balance</Text>
-              <Text style={styles.balanceTotal}>
+              <Text style={styles.balanceTotal} numberOfLines={1}>
                 Rs. {balance.toFixed(2)}
               </Text>
 
@@ -212,23 +229,20 @@ export default function Dashboard() {
                   <View style={styles.statIconWrap}>
                     <Ionicons name="arrow-down" size={14} color={COLORS.primary} />
                   </View>
-                  <View>
+                  <View style={{ flex: 1 }}>
                     <Text style={styles.statLabel}>Income</Text>
-                    <Text style={styles.statAmount}>+Rs. {income.toFixed(2)}</Text>
+                    <Text style={styles.statAmount} numberOfLines={1}>+Rs. {income.toFixed(2)}</Text>
                   </View>
                 </View>
-
-                {/* Vertical separator */}
-                <View style={styles.verticalSep} />
 
                 {/* Expenses */}
                 <View style={styles.statBox}>
                   <View style={[styles.statIconWrap, styles.statIconExpense]}>
                     <Ionicons name="arrow-up" size={14} color="#F87171" />
                   </View>
-                  <View>
+                  <View style={{ flex: 1 }}>
                     <Text style={styles.statLabel}>Expenses</Text>
-                    <Text style={[styles.statAmount, { color: 'rgba(255,255,255,0.75)' }]}>
+                    <Text style={[styles.statAmount, { color: 'rgba(255,255,255,0.75)' }]} numberOfLines={1}>
                       -Rs. {expenses.toFixed(2)}
                     </Text>
                   </View>
@@ -407,14 +421,13 @@ const styles = StyleSheet.create({
     marginVertical: 18,
   },
   balanceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    gap: 16,
   },
   statBox: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
   },
   statIconWrap: {
     width: 32,
@@ -438,12 +451,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     letterSpacing: -0.3,
-  },
-  verticalSep: {
-    width: 1,
-    height: 36,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    marginHorizontal: 16,
   },
 
   // Section Header

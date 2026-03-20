@@ -509,9 +509,11 @@ const styles = StyleSheet.create({
   footerText: {
     textAlign: 'center',
     marginTop: 28,
+    marginBottom: 50,
     fontSize: 12.5,
     color: COLORS.textLight,
     lineHeight: 18,
+    
   },
   footerLink: {
     color: COLORS.primaryDark,
